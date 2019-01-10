@@ -1,7 +1,13 @@
 #coding:utf-8
 import argparse
 import sys
+import multiprocessing
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import random
+
+dcap = dict(DesiredCapabilities.PHANTOMJS)
+dcap["phantomjs.page.settings.loadImages"] = False
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -9,28 +15,34 @@ sys.setdefaultencoding('utf-8')
 def check(host):
 	try:
 		url = 'http://'+str(host.strip())
-		driver = webdriver.PhantomJS()
+		driver = webdriver.PhantomJS(desired_capabilities=dcap)
+		driver.set_page_load_timeout(10)
 		driver.get(url)
 		result = driver.title
 		if not len(result)==0:
-			result = host+':'+driver.title
+			result = host+':'+driver.title+'\n'
 			print result
 			driver.quit()
 		else:
 			try:
+				driver.quit()
 				url = 'https://'+str(host.strip())
 				driver = webdriver.PhantomJS()
+				driver.set_page_load_timeout(10)
 				driver.get(url)
 				result = driver.title
 				if not len(result)==0:
-					result = host+':'+driver.title
+					result = host+':'+driver.title+'\n'
 					print result
 					driver.quit()
 				else:
-					print host+':'+'unkonwn'
+					driver.quit()
+					print host+':'+'unkonwn\n'
 			except Exception,e:
+				print host+':'+'unkonwn\n'
 				pass
 	except Exception,e:
+		print host+':'+'unkonwn\n'
 		pass
 
 def main(host,file):
@@ -38,9 +50,12 @@ def main(host,file):
 		if host:
 			check(host)
 		elif file:
+			pool = multiprocessing.Pool(processes = 8)
 			f = open(file)
 			for i in f:
-				check(i.strip())
+				pool.apply_async(check, (i.strip(), ))
+			pool.close()
+			pool.join()
 			f.close()
 		else:
 			print 'usage: web_title.py [-h] [--host HOST] [--file FILE]'
