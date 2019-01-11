@@ -1,6 +1,6 @@
 # web_title
 
-动态爬取网站名称，Python2+selenium+phantomjs。支持单个域名查询和从文件导入
+动态爬取网站名称，Python2+selenium+phantomjs。支持单个域名查询和从文件导入,支持多进程。
 
 依赖库：
 
@@ -24,10 +24,14 @@ multiprocessing
 
 --host  指定域名
 
-python web_title.py --host=www.a.com
+python web_title.py --host www.a.com
 
 --file 从文件导入域名
 
 将域名一行一个存入文件中并保存，运行下列命令：
 
-python web_title.py --file=hosts.txt
+python web_title.py --file hosts.txt
+
+--threads 指定线程数，默认为5个线程
+
+python web_title.py --file hosts.txt --threads 5
