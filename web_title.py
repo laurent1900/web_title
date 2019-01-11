@@ -44,12 +44,12 @@ def check(host):
 		print host+':'+'unkonwn\n'
 		pass
 
-def main(host,file):
+def main(host,file,threads):
 	try:
 		if host:
 			check(host)
 		elif file:
-			pool = multiprocessing.Pool(processes = 8)
+			pool = multiprocessing.Pool(processes = int(threads))
 			f = open(file)
 			for i in f:
 				pool.apply_async(check, (i.strip(), ))
@@ -69,6 +69,7 @@ if __name__ == '__main__':
 	parse = argparse.ArgumentParser()
 	parse.add_argument('--host', help="Enter the host that you want to check")
 	parse.add_argument('--file', help="Input from list of hosts")
+	parse.add_argument('--threads', help="Input the number of threads")
 	args = parse.parse_args()
 	if len(sys.argv) == 1:
 		print 'usage: web_title.py [-h] [--host HOST] [--file FILE]'
@@ -76,7 +77,9 @@ if __name__ == '__main__':
 		print '-h, --help   show this help message and exit'
 		print '--host HOST  Enter the host that you want to check'
 		print '--file FILE  Input from list of hosts'
+		print '--threads THREADS  Input the number of threads'
 	else:
 		host = args.host
 		file = args.file
-		main(host,file)
+		threads = int(args.threads)
+		main(host,file,threads)
