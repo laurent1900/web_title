@@ -14,7 +14,7 @@ sys.setdefaultencoding('utf-8')
 def check(host):
 	try:
 		url = 'http://'+str(host.strip())
-		driver = webdriver.PhantomJS(desired_capabilities=dcap)
+		driver = webdriver.PhantomJS(desired_capabilities=dcap,service_args=["--webdriver-loglevel=ERROR"])
 		driver.set_page_load_timeout(10)
 		driver.get(url)
 		result = driver.title
@@ -26,7 +26,7 @@ def check(host):
 			try:
 				driver.quit()
 				url = 'https://'+str(host.strip())
-				driver = webdriver.PhantomJS()
+				driver = webdriver.PhantomJS(desired_capabilities=dcap,service_args=["--webdriver-loglevel=ERROR"])
 				driver.set_page_load_timeout(10)
 				driver.get(url)
 				result = driver.title
@@ -81,5 +81,8 @@ if __name__ == '__main__':
 	else:
 		host = args.host
 		file = args.file
-		threads = int(args.threads)
+		if args.threads:
+			threads = int(args.threads)
+		else:
+			threads = 5
 		main(host,file,threads)
