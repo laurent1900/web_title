@@ -54,9 +54,9 @@ def main(host,file):
 			f = open(file)
 			for i in f:
 				pool.apply_async(check, (i.strip(), ))
+			f.close()
 			pool.close()
 			pool.join()
-			f.close()
 		else:
 			print 'usage: web_title.py [-h] [--host HOST] [--file FILE]'
 			print 'optional arguments:'
