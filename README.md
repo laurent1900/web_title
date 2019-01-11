@@ -8,6 +8,8 @@ selenium==2.48.0
 
 argparse
 
+multiprocessing
+
 安装方法：
 
 1、在官网下载phantomjs，这里面分别提供了Windows、Mac、以及Linux 的安装包，根据自己的需要下载即可。下载完成后，将其解压到容易找到的文件夹中，打开并找到bin文件夹里的 phantomjs.exe，点击运行，出现如下界面，说明安装成功，可以使用了。
