@@ -11,6 +11,8 @@ dcap["phantomjs.page.settings.loadImages"] = False
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+# service_args = ['--proxy=http://127.0.0.1:8080','--proxy-type=http',]
+
 def check(host):
 	try:
 		url = 'http://'+str(host.strip())
@@ -19,8 +21,8 @@ def check(host):
 		driver.get(url)
 		result = driver.title
 		if not len(result)==0:
-			result = host+':'+driver.title+'\n'
-			print result
+			result = host+' # '+driver.title+''
+			# print result
 			driver.quit()
 		else:
 			try:
@@ -31,18 +33,28 @@ def check(host):
 				driver.get(url)
 				result = driver.title
 				if not len(result)==0:
-					result = host+':'+driver.title+'\n'
-					print result
+					result = host+' # '+driver.title+''
+					# print result
 					driver.quit()
 				else:
+					result = host+' # '+'不可达'
 					driver.quit()
-					print host+':'+'unkonwn\n'
+					# print host+' # '+'不可达'
+				return result
 			except Exception,e:
-				print host+':'+'unkonwn\n'
+				result = host+' # '+'不可达'
+				# print host+' # '+'不可达'
+				return result
 				pass
+		return result
 	except Exception,e:
-		print host+':'+'unkonwn\n'
+		result = host+' # '+'不可达'
+		return result
 		pass
+
+def mycallback(x):
+	with open('result.txt', 'a+') as f:
+		f.write(str(x)+'\n')
 
 def main(host,file,threads):
 	try:
@@ -52,7 +64,7 @@ def main(host,file,threads):
 			pool = multiprocessing.Pool(processes = int(threads))
 			f = open(file)
 			for i in f:
-				pool.apply_async(check, (i.strip(), ))
+				pool.apply_async(check, (i.strip(), ), callback=mycallback)
 			f.close()
 			pool.close()
 			pool.join()
@@ -86,3 +98,4 @@ if __name__ == '__main__':
 		else:
 			threads = 5
 		main(host,file,threads)
+	# main(host='',file='./1.txt',threads=1)
