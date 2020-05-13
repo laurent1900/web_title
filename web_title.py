@@ -21,7 +21,7 @@ def check(host):
 		driver.get(url)
 		result = driver.title
 		if not len(result)==0:
-			result = host+' # '+driver.title+''
+			result = host+','+driver.title+''
 			# print result
 			driver.quit()
 		else:
@@ -33,27 +33,27 @@ def check(host):
 				driver.get(url)
 				result = driver.title
 				if not len(result)==0:
-					result = host+' # '+driver.title+''
+					result = host+','+driver.title+''
 					# print result
 					driver.quit()
 				else:
-					result = host+' # '+'不可达'
+					result = host+','+'不可达'
 					driver.quit()
 					# print host+' # '+'不可达'
 				return result
 			except Exception,e:
-				result = host+' # '+'不可达'
+				result = host+','+'不可达'
 				# print host+' # '+'不可达'
 				return result
 				pass
 		return result
 	except Exception,e:
-		result = host+' # '+'不可达'
+		result = host+','+'不可达'
 		return result
 		pass
 
 def mycallback(x):
-	with open('result.txt', 'a+') as f:
+	with open('result.csv', 'a+') as f:
 		f.write(str(x)+'\n')
 
 def main(host,file,threads):
