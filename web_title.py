@@ -52,6 +52,47 @@ def check(host):
 		return result
 		pass
 
+def check_print(host):
+	try:
+		url = 'http://'+str(host.strip())
+		driver = webdriver.PhantomJS(desired_capabilities=dcap,service_args=["--webdriver-loglevel=ERROR"])
+		driver.set_page_load_timeout(10)
+		driver.get(url)
+		result = driver.title
+		if not len(result)==0:
+			result = host+','+driver.title+''
+			print result
+			driver.quit()
+		else:
+			try:
+				driver.quit()
+				url = 'https://'+str(host.strip())
+				driver = webdriver.PhantomJS(desired_capabilities=dcap,service_args=["--webdriver-loglevel=ERROR"])
+				driver.set_page_load_timeout(10)
+				driver.get(url)
+				result = driver.title
+				if not len(result)==0:
+					result = host+','+driver.title+''
+					print result
+					driver.quit()
+				else:
+					result = host+','+'不可达'
+					driver.quit()
+					print result
+				return result
+			except Exception,e:
+				result = host+','+'不可达'
+				print result
+				return result
+				pass
+		return result
+	except Exception,e:
+		result = host+','+'不可达'
+		print result
+		return result
+		pass
+
+
 def mycallback(x):
 	with open('result.csv', 'a+') as f:
 		f.write(str(x)+'\n')
@@ -59,7 +100,7 @@ def mycallback(x):
 def main(host,file,threads):
 	try:
 		if host:
-			check(host)
+			check_print(host)
 		elif file:
 			pool = multiprocessing.Pool(processes = int(threads))
 			f = open(file)
