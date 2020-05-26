@@ -125,6 +125,9 @@ def main(host,file,threads):
 		if host:
 			check_print(host)
 		elif file:
+			m = open('result.csv','w+')
+			m.write('网站名称'+','+'实测名称'+','+'域名\n')
+			m.close()
 			pool = multiprocessing.Pool(processes = int(threads))
 			f = open(file)
 			data = json.load(f)
@@ -143,9 +146,6 @@ def main(host,file,threads):
 		print e
 
 if __name__ == '__main__':
-	m = open('result.csv','w+')
-	m.write('网站名称'+','+'实测名称'+','+'域名\n')
-	m.close()
 	parse = argparse.ArgumentParser()
 	parse.add_argument('--host', help="Enter the host that you want to check")
 	parse.add_argument('--file', help="Input from list of hosts")
